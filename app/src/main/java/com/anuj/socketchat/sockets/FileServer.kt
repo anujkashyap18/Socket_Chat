@@ -20,8 +20,7 @@ class FileServer internal constructor(
     messageArray: ArrayList<Message>,
     port: Int,
     serverIpAddress: String
-) :
-    Thread() {
+) : Thread() {
     private val context: Context
     private val serverIpAddress: String
     private val TAG = "FILE SERVER"
