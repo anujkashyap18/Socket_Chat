@@ -1,11 +1,11 @@
 package com.anuj.socketchat.activity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.net.wifi.WifiManager
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.format.Formatter
-import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -19,6 +19,7 @@ import com.anuj.socketchat.databinding.ActivityChatBinding
 import com.anuj.socketchat.model.Message
 import com.anuj.socketchat.sockets.ChatServer
 import com.anuj.socketchat.sockets.FileServer
+import com.google.android.material.internal.ContextUtils.getActivity
 import java.io.PrintWriter
 import java.net.Socket
 import java.util.*
@@ -106,8 +107,7 @@ class ChatActivity : AppCompatActivity() {
             if (!binding.etMessagetext.text.toString().isEmpty()) {
                 val user:ChatActivity.User =
                     ChatActivity.User(
-                        "1:" + binding.etMessagetext.text.toString()
-                    )
+                        "1:" + binding.etMessagetext.text.toString(),this)
                 user.execute()
             } else {
                 val toast = Toast.makeText(
@@ -121,25 +121,8 @@ class ChatActivity : AppCompatActivity() {
     }
 
     @SuppressLint("StaticFieldLeak")
-    class User internal constructor(var msg: String) :
+    class User internal constructor(var msg: String,var context: Context) :
         AsyncTask<Void?, Void?, String>() {
-//        protected override fun doInBackground(vararg voids: Void): String {
-//            try {
-//                val ipadd: String = serverIpAddress
-//                val portr: Int = sendPort
-//                val clientSocket = Socket(ipadd, portr)
-//                val outToServer = clientSocket.getOutputStream()
-//                val output = PrintWriter(outToServer)
-//                output.println(msg)
-//                output.flush()
-//                clientSocket.close()
-//                runOnUiThread { binding.ivsendmesaage.setEnabled(false) }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//            return msg
-//        }
-
         override fun doInBackground(vararg params: Void?): String {
             try {
                 val ipadd: String = serverIpAddress
@@ -150,7 +133,7 @@ class ChatActivity : AppCompatActivity() {
                 output.println(msg)
                 output.flush()
                 clientSocket.close()
-//                runOnUiThread { binding.ivsendmesaage.setEnabled(false) }
+                (getActivity(context) as ChatActivity?)!!.runOnUiThread { binding.ivsendmesaage.isEnabled = false }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -159,9 +142,7 @@ class ChatActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: String) {
             var result = result
-
-//            runOnUiThread { binding.ivsendmesaage.isEnabled = true }
-//            Log.i(TAG, "on post execution result => $result")
+            (getActivity(context) as ChatActivity?)!!.runOnUiThread { binding.ivsendmesaage.isEnabled = true }
             val stringBuilder = StringBuilder(result)
             if (stringBuilder[0] == '1' && stringBuilder[1] == ':') {
                 stringBuilder.deleteCharAt(0)

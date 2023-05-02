@@ -60,7 +60,7 @@ class ChatServer internal constructor(
             println(TAG + "started")
             while (!interrupted()) {
                 val connectSocket = initSocket.accept()
-                val handle: receiveTexts = receiveTexts()
+                val handle = receiveTexts()
                 handle.execute(connectSocket)
             }
             initSocket.close()
@@ -105,8 +105,7 @@ class ChatServer internal constructor(
                 stringBuilder.deleteCharAt(0)
                 stringBuilder.deleteCharAt(0)
                 result = stringBuilder.toString()
-                val message_List: RecyclerView
-                message_List = activity.findViewById(R.id.message_list)
+                val message_List: RecyclerView = activity.findViewById(R.id.message_list)
                 val layerDrawable = message_List.background as LayerDrawable
             }
         }
