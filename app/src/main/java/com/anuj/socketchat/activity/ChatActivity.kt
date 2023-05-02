@@ -69,7 +69,7 @@ class ChatActivity : AppCompatActivity() {
         val bundle = intent.extras
         if (bundle != null) {
             val info = bundle.getString("ip&port")!!
-            val infos = info!!.split(" ").toTypedArray()
+            val infos = info.split(" ").toTypedArray()
             serverIpAddress = infos[0]
             sendPort = infos[1].toInt()
             myport = infos[2].toInt()
@@ -105,10 +105,9 @@ class ChatActivity : AppCompatActivity() {
 
         binding.ivsendmesaage.setOnClickListener { v ->
             if (!binding.etMessagetext.text.toString().isEmpty()) {
-                val user:ChatActivity.User =
-                    ChatActivity.User(
-                        "1:" + binding.etMessagetext.text.toString(),this)
+                val user = User("1:" + binding.etMessagetext.text.toString(),this)
                 user.execute()
+//                binding.etMessagetext.setText("")
             } else {
                 val toast = Toast.makeText(
                     applicationContext,
